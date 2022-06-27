@@ -1,5 +1,7 @@
 mod image;
 mod phantoms;
+mod filters;
+mod io;
 
 pub use image::Image;
 

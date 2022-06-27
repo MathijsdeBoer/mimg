@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 pub enum ImageError {
     ShapeMismatchError
@@ -10,6 +10,34 @@ pub struct Image<T> {
     spacing: Vec<f64>,
     origin: Vec<f64>,
     orientation: Vec<f64>,
+}
+
+impl<T> Image<T> {
+    fn new(
+        data: Vec<T>,
+        shape: Vec<usize>,
+        spacing: Vec<f64>,
+        origin: Vec<f64>,
+        orientation: Vec<f64>
+    ) -> Self {
+        Image::<T>{
+            data,
+            shape,
+            spacing,
+            origin,
+            orientation
+        }
+    }
+
+    fn default() -> Self {
+        Image::<T>{
+            data: vec![],
+            shape: vec![0, 0, 0],
+            spacing: vec![1.0, 1.0, 1.0],
+            origin: vec![0.0, 0.0, 0.0],
+            orientation: vec![0.0, 0.0, 0.0]
+        }
+    }
 }
 
 impl<T> Add<Image<T>> for Image<T>
@@ -33,6 +61,14 @@ impl<T> Add<Image<T>> for Image<T>
                 ..self
             }
         }
+    }
+}
+
+impl<T> AddAssign<Image<T>> for Image<T>
+    where T: Add<Output=T> + Copy
+{
+    fn add_assign(&mut self, rhs: Image<T>) {
+        todo!()
     }
 }
 
@@ -60,6 +96,14 @@ impl<T> Sub<Image<T>> for Image<T>
     }
 }
 
+impl<T> SubAssign<Image<T>> for Image<T>
+    where T: Sub<Output=T> + Copy
+{
+    fn sub_assign(&mut self, rhs: Image<T>) {
+        todo!()
+    }
+}
+
 impl<T> Div<Image<T>> for Image<T>
     where T: Div<Output=T> + Copy
 {
@@ -84,6 +128,14 @@ impl<T> Div<Image<T>> for Image<T>
     }
 }
 
+impl<T> DivAssign<Image<T>> for Image<T>
+    where T: Div<Output=T> + Copy
+{
+    fn div_assign(&mut self, rhs: Image<T>) {
+        todo!()
+    }
+}
+
 impl<T> Mul<Image<T>> for Image<T>
     where T:Mul<Output=T> + Copy
 {
@@ -105,5 +157,13 @@ impl<T> Mul<Image<T>> for Image<T>
                 ..self
             }
         }
+    }
+}
+
+impl<T> MulAssign<Image<T>> for Image<T>
+    where T:Mul<Output=T> + Copy
+{
+    fn mul_assign(&mut self, rhs: Image<T>) {
+        todo!()
     }
 }
