@@ -1,3 +1,8 @@
+mod image;
+mod phantoms;
+
+pub use image::Image;
+
 #[cfg(test)]
 mod tests {
     #[test]
