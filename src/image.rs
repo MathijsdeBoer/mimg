@@ -1,7 +1,21 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
+pub enum ImageType {
+    UBYTE(Image<u8>),
+    SBYTE(Image<i8>),
+    USHORT(Image<u16>),
+    SSHORT(Image<i16>),
+    UINT(Image<u32>),
+    SINT(Image<i32>),
+    ULONG(Image<u64>),
+    SLONG(Image<i64>),
+    FLOAT(Image<f32>),
+    DOUBLE(Image<f64>)
+}
+
 pub enum ImageError {
-    ShapeMismatchError
+    ShapeMismatchError,
+    ImageError
 }
 
 pub struct Image<T> {
