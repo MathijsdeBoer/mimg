@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
+use ndarray::prelude::*;
+
 pub enum ImageType {
     UBYTE(Image<u8>),
     SBYTE(Image<i8>),
@@ -13,13 +15,22 @@ pub enum ImageType {
     DOUBLE(Image<f64>)
 }
 
+pub enum ImageDim {
+    NODIM = 0,
+    ONEDIM = 1,
+    TWODIM = 2,
+    THREEDIM = 3,
+    FOURDIM = 4,
+    FIVEDIM = 5
+}
+
 pub enum ImageError {
     ShapeMismatchError,
     ImageError
 }
 
 pub struct Image<T> {
-    data: Vec<T>,
+    data: ArrayD<T>,
     shape: Vec<usize>,
     spacing: Vec<f64>,
     origin: Vec<f64>,
@@ -28,7 +39,7 @@ pub struct Image<T> {
 
 impl<T> Image<T> {
     fn new(
-        data: Vec<T>,
+        data: ArrayD<T>,
         shape: Vec<usize>,
         spacing: Vec<f64>,
         origin: Vec<f64>,
@@ -45,7 +56,7 @@ impl<T> Image<T> {
 
     fn default() -> Self {
         Image::<T>{
-            data: vec![],
+            data: ArrayD::zeros((0)),
             shape: vec![0, 0, 0],
             spacing: vec![1.0, 1.0, 1.0],
             origin: vec![0.0, 0.0, 0.0],
@@ -63,12 +74,7 @@ impl<T> Add<Image<T>> for Image<T>
         if self.shape != rhs.shape {
             panic!("Image shapes do not match")
         } else {
-            let new_data: Vec<T> = self.data.iter()
-                .zip(rhs.data.iter())
-                .map(|(&a, &b)| {
-                    a + b
-                })
-                .collect();
+            let new_data: ArrayD<T> = self.data + rhs.data;
 
             Image {
                 data: new_data,
@@ -95,12 +101,7 @@ impl<T> Sub<Image<T>> for Image<T>
         if self.shape != rhs.shape {
             panic!("Image shapes do not match")
         } else {
-            let new_data: Vec<T> = self.data.iter()
-                .zip(rhs.data.iter())
-                .map(|(&a, &b)| {
-                    a - b
-                })
-                .collect();
+            let new_data: ArrayD<T> = self.data - rhs.data;
 
             Image {
                 data: new_data,
@@ -127,12 +128,7 @@ impl<T> Div<Image<T>> for Image<T>
         if self.shape != rhs.shape {
             panic!("Image shapes do not match")
         } else {
-            let new_data: Vec<T> = self.data.iter()
-                .zip(rhs.data.iter())
-                .map(|(&a, &b)| {
-                    a / b
-                })
-                .collect();
+            let new_data: ArrayD<T> = self.data / rhs.data;
 
             Image {
                 data: new_data,
@@ -159,12 +155,7 @@ impl<T> Mul<Image<T>> for Image<T>
         if self.shape != rhs.shape {
             panic!("Image shapes do not match")
         } else {
-            let new_data: Vec<T> = self.data.iter()
-                .zip(rhs.data.iter())
-                .map(|(&a, &b)| {
-                    a * b
-                })
-                .collect();
+            let new_data: ArrayD<T> = self.data * rhs.data;
 
             Image {
                 data: new_data,
