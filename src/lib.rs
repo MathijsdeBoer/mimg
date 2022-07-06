@@ -2,6 +2,8 @@ mod image;
 mod phantoms;
 mod filters;
 mod io;
+mod metrics;
+mod draw;
 
 pub use image::Image;
 
