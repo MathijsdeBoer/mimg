@@ -1,32 +1,28 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use ndarray::prelude::*;
+use ndarray_rand::rand_distr::num_traits::Zero;
 
 pub enum ImageType {
-    UBYTE(Image<u8>),
-    SBYTE(Image<i8>),
-    USHORT(Image<u16>),
-    SSHORT(Image<i16>),
-    UINT(Image<u32>),
-    SINT(Image<i32>),
-    ULONG(Image<u64>),
-    SLONG(Image<i64>),
-    FLOAT(Image<f32>),
-    DOUBLE(Image<f64>)
+    Ubyte(Image<u8>),
+    Sbyte(Image<i8>),
+    Ushort(Image<u16>),
+    Sshort(Image<i16>),
+    Uint(Image<u32>),
+    Sint(Image<i32>),
+    Ulong(Image<u64>),
+    Slong(Image<i64>),
+    Float(Image<f32>),
+    Double(Image<f64>)
 }
 
 pub enum ImageDim {
-    NODIM = 0,
-    ONEDIM = 1,
-    TWODIM = 2,
-    THREEDIM = 3,
-    FOURDIM = 4,
-    FIVEDIM = 5
-}
-
-pub enum ImageError {
-    ShapeMismatchError,
-    ImageError
+    Nodim = 0,
+    Onedim = 1,
+    Twodim = 2,
+    Threedim = 3,
+    Fourdim = 4,
+    Fivedim = 5
 }
 
 pub struct Image<T> {
@@ -37,7 +33,8 @@ pub struct Image<T> {
     orientation: Vec<f64>,
 }
 
-impl<T> Image<T> {
+impl<T> Image<T>
+    where T: Zero + Copy{
     fn new(
         data: ArrayD<T>,
         shape: Vec<usize>,
@@ -56,7 +53,7 @@ impl<T> Image<T> {
 
     fn default() -> Self {
         Image::<T>{
-            data: ArrayD::zeros((0)),
+            data: ArrayD::zeros(ndarray::IxDynImpl::default()),
             shape: vec![0, 0, 0],
             spacing: vec![1.0, 1.0, 1.0],
             origin: vec![0.0, 0.0, 0.0],
@@ -85,10 +82,14 @@ impl<T> Add<Image<T>> for Image<T>
 }
 
 impl<T> AddAssign<Image<T>> for Image<T>
-    where T: Add<Output=T> + Copy
+    where T: AddAssign + Copy
 {
     fn add_assign(&mut self, rhs: Image<T>) {
-        todo!()
+        if self.shape != rhs.shape {
+            panic!("Image shapes do not match")
+        } else {
+            self.data += &rhs.data;
+        }
     }
 }
 
@@ -112,10 +113,14 @@ impl<T> Sub<Image<T>> for Image<T>
 }
 
 impl<T> SubAssign<Image<T>> for Image<T>
-    where T: Sub<Output=T> + Copy
+    where T: SubAssign + Copy
 {
     fn sub_assign(&mut self, rhs: Image<T>) {
-        todo!()
+        if self.shape != rhs.shape {
+            panic!("Image shapes do not match")
+        } else {
+            self.data -= &rhs.data;
+        }
     }
 }
 
@@ -139,10 +144,14 @@ impl<T> Div<Image<T>> for Image<T>
 }
 
 impl<T> DivAssign<Image<T>> for Image<T>
-    where T: Div<Output=T> + Copy
+    where T: DivAssign + Copy
 {
     fn div_assign(&mut self, rhs: Image<T>) {
-        todo!()
+        if self.shape != rhs.shape {
+            panic!("Image shapes do not match")
+        } else {
+            self.data /= &rhs.data;
+        }
     }
 }
 
@@ -166,9 +175,13 @@ impl<T> Mul<Image<T>> for Image<T>
 }
 
 impl<T> MulAssign<Image<T>> for Image<T>
-    where T:Mul<Output=T> + Copy
+    where T:MulAssign + Copy
 {
     fn mul_assign(&mut self, rhs: Image<T>) {
-        todo!()
+        if self.shape != rhs.shape {
+            panic!("Image shapes do not match")
+        } else {
+            self.data *= &rhs.data;
+        }
     }
 }

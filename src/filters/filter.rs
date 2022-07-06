@@ -1,4 +1,3 @@
-use std::error::Error;
 use crate::image::ImageType;
 
 pub enum FilterError {
